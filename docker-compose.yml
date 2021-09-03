@@ -23,6 +23,7 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}
     restart: unless-stopped
+    command: [ "jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root" ,"--NotebookApp.token='${JUPYTER_TOKEN}'" , "--NotebookApp.base_url='/'" ]
     volumes:
       - ./notebooks:/root/airflow/notebooks
 networks:

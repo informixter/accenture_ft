@@ -1,4 +1,4 @@
-SERVER=127.0.0.1
+SERVER=65.108.53.187
 
 build:
 	 docker-compose build jupyter
@@ -18,3 +18,6 @@ deploy: git-fix
 	ssh -i keys/id_rsa -t root@$(SERVER) 'cd accenture_ft && make stop'
 	ssh -i keys/id_rsa -t root@$(SERVER) 'cd accenture_ft && git pull origin main'
 	ssh -i keys/id_rsa -t root@$(SERVER) 'cd accenture_ft && make run'
+
+enter:
+	ssh -i keys/id_rsa root@$(SERVER)
