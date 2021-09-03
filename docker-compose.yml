@@ -26,6 +26,28 @@ services:
     command: [ "jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root" ,"--NotebookApp.token='${JUPYTER_TOKEN}'" , "--NotebookApp.base_url='/'" ]
     volumes:
       - ./notebooks:/root/airflow/notebooks
+  php:
+    build:
+      context: api
+      dockerfile: Dockerfile
+    volumes:
+      - ./api/app:/var/www/html
+    networks:
+      - backend
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    volumes:
+      - ./api/default.conf:/etc/nginx/nginx.conf
+      - asset-volume:/app
+    depends_on:
+      - php
+    networks:
+      - backend
 networks:
   backend:
     driver: bridge
+volumes:
+  asset-volume:

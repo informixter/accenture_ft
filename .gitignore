@@ -1,2 +1,4 @@
 /.idea/
 /keys/
+/notebooks/.ipynb_checkpoints
+/api/app/vendor
