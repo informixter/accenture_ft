@@ -46,6 +46,21 @@ services:
       - php
     networks:
       - backend
+  traefik:
+    image: traefik:v2.3
+    restart: unless-stopped
+    command:
+      - --configFile=/traefik.yml
+      - --providers.docker=true
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/traefik.yml
+      - ./tmp/ssl:/ssl
 networks:
   backend:
     driver: bridge
