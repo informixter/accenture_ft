@@ -16,7 +16,7 @@ git-fix:
 
 deploy: git-fix
 	ssh -i keys/id_rsa -t root@$(SERVER) 'cd accenture_ft && make stop'
-	ssh -i keys/id_rsa -t root@$(SERVER) 'cd accenture_ft && git pull origin main'
+	ssh -i keys/id_rsa -t root@$(SERVER) 'cd accenture_ft && git pull origin main '
 	ssh -i keys/id_rsa -t root@$(SERVER) 'cd accenture_ft && make run'
 
 enter:
