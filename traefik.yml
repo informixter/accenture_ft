@@ -1,0 +1,46 @@
+providers:
+  file:
+    filename: /traefik.yml
+    watch: true
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedbydefault: false
+
+entryPoints:
+  web:
+    address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+  https:
+    address: ":443"
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: root@insrt.ru
+      storage: acme.json
+      httpChallenge:
+        entryPoint: web
+
+log:
+  level: DEBUG
+
+http:
+  routers:
+    app:
+      entryPoints:
+        - "web"
+        - "https"
+      rule: "Host(`investhelper.insrt.ru`)"
+      service: app-srv
+      tls:
+        certResolver: myresolver
+      priority: 26
+  services:
+    app-srv:
+      loadBalancer:
+        servers:
+          - url: http://nginx:8080
