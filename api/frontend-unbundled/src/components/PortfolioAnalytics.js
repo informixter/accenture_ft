@@ -110,7 +110,7 @@ export const PortfolioAnalytics = ({portfolio, modelPortfolio = null, scenario})
 						modelPortfolio &&
 						<div className={`mb-2 badge badge-pill ${volDif < 0 ? 'badge-primary' : 'badge-danger'}`}>&nbsp;{(volDif > 0 ? '+' : '') + ' ' + (volDif.toFixed(2)) + '%'}</div>
 					}
-					<p style={{minHeight: 60}} className="mb-0 border-top pt-3 small">Средняя волатильность</p>
+					<p style={{minHeight: 60}} className="mb-0 border-top pt-3 small">Волатильность портфеля за последние 6 мес, % год</p>
 				</div>
 			</div>
 

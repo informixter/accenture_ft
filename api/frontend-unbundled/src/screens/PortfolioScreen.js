@@ -79,7 +79,10 @@ export default function PortfolioScreen ({})
 			<div onClick={() => setScreen("MAIN")}>
 				<IconBack/>
 			</div>
-			<h1>Портфель #{portfolioId}</h1>
+			<div className="d-flex justify-content-between">
+				<h1>Портфель #{portfolioId}</h1>
+				<a href="https://docs.google.com/document/d/1Hzl1A3EaWVm5j7UyyKnNDCIkNhXUMA-D8U-DT5nSQ1E/edit" target="_blank">ДОКУМЕНТАЦИЯ И ОПИСАНИЕ АЛГОРИТМА</a>
+			</div>
 			<p className="text-muted ">Это реальный портфель пользователя, который сформирован вручную в соответствии с его инвестиционным профилем.<br/><b className="text-danger">Расчет бумаг - реальный, произведен на 4 сентября 2021 года.</b> Данные и котировки по тикерам получены с yahoo finance / naufor / мосбиржи.<br/>
 			<b className="text-danger">Прогноз цены</b> реализован в рамках хакатона и заключается в регрессионном анализе (код расчета и прогноза написан на python и приложен в репозитории).</p>
 

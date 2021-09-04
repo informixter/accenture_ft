@@ -18,7 +18,7 @@ export const PortfolioItems = ({portfolio, scenario}) =>
 								<span>{Math.round(row.count * row.price * 100) / 100} {row.currency}</span>
 							</div>
 							<p className="text-muted mb-0">{row.count} шт · {Math.round(row.price * 100) / 100} {row.currency}</p>
-							<p className="text-muted mb-0">{row.asset_class} · {row.rating}</p>
+							<p className="text-muted mb-0"><span className="text-warning">{row.asset_class}</span> · {row.rating}</p>
 
 							<div className="d-flex justify-content-between mt-3">
 								<span className="card-title">Прогноз на год</span>
