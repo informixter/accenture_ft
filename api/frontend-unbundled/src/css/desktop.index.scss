@@ -1,0 +1,38 @@
+@media only screen and (min-width: 600px)
+{
+	.screen
+	{
+		min-height: 100%;
+		box-shadow: 0 3px 6px 0 rgba(50,50,50,.3);
+		
+		.screen-body
+		{
+			padding: 15px 20px;
+		}
+	}
+	
+	.pair-wrapper
+	{
+		.main-info
+		{
+			.subject-name
+			{
+				font-size: 18px;
+			}
+		}
+		
+		.time-info, .additional-info
+		{
+			font-size: 14px;
+		}
+	}
+	
+	.day-wrapper
+	{
+		.timer
+		{
+			font-size: 14px;
+		}
+	}
+	
+}
