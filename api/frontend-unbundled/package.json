@@ -1,0 +1,49 @@
+{
+  "name": "pairsWeb",
+  "version": "5.0.0",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^5.0.0",
+    "date-fns": "^2.14.0",
+    "multiselect-react-dropdown": "^1.6.11",
+    "node-sass": "^4.14.1",
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.6.0",
+    "react-chartjs-2": "^3.0.4",
+    "react-datepicker": "^3.0.0",
+    "react-dom": "^16.8.6",
+    "react-infinite-scroller": "^1.2.4",
+    "react-redux": "^7.1.3",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.0.1",
+    "redux": "^4.0.5",
+    "redux-act": "^1.8.0",
+    "redux-persist": "^6.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "start-sw": "http-server ./build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "redux-logger": "^3.0.6"
+  }
+}
