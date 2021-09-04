@@ -6,9 +6,15 @@ build:
 stop:
 	docker-compose down -v
 
-run:
+run_local:
+	docker-compose up -d postgres jupyter php nginx
+
+run_prod:
 	docker-compose up -d
 
+init:
+	docker-compose exec -T jupyter bash -c 'papermill extractors.ipynb output/extractors.ipynb'
+	docker-compose exec -T jupyter bash -c 'papermill lg-exp.ipynb output/lg-exp.ipynb'
 
 git-fix:
 	git add .

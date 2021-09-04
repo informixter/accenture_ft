@@ -1,12 +1,11 @@
 xlrd
-fabric2
-redis
 jupyterlab
 pandas
 requests
 openpyxl
-asyncio
-aiohttp
 sqlalchemy
 psycopg2-binary
 papermill
+statsmodels
+pandas_datareader
+yfinance
