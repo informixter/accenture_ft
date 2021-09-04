@@ -5,3 +5,4 @@
 /api/frontend-unbundled/node_modules
 /tmp/
 /notebooks/.Trash-0/
+/notebooks/*.xlsx

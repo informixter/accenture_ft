@@ -9,6 +9,7 @@ stop:
 run:
 	docker-compose up -d
 
+
 git-fix:
 	git add .
 	git commit -m "deploy commit `date +%Y_%m_%d"_"%H_%M_%S`"

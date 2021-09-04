@@ -9,3 +9,4 @@ asyncio
 aiohttp
 sqlalchemy
 psycopg2-binary
+papermill
