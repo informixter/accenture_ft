@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import 'aos/dist/aos.css';
 import './css/bootstrap.min.css';
 import './css/index.scss';
 import 'whatwg-fetch';
@@ -17,3 +18,4 @@ ReactDOM.render(
             <App />
         </PersistGate>
     </Provider>, document.getElementById('root'));
+

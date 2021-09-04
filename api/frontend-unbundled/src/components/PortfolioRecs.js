@@ -28,7 +28,7 @@ export const PortfolioRecs = ({recs, portfolio, scenario, modelPortfolio, availa
 		}, 0) / calcTotalSum(port) * 100) / 100;
 	}
 
-	const filteredLimits = availableLimits.filter(_ => Boolean(_.asset_class_base_weight) && (calcPartInPortfolio(portfolio, _.asset_class) !== 0 || calcPartInPortfolio(modelPortfolio, _.asset_class) !== 0));
+	const filteredLimits = availableLimits.filter(_ => (calcPartInPortfolio(portfolio, _.asset_class) !== 0 || calcPartInPortfolio(modelPortfolio, _.asset_class) !== 0));
 	return  (
 		<>
 			<h3 className="mt-4">Сравнительный анализ</h3>

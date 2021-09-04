@@ -6,6 +6,7 @@ import IconBack from "../components/icons/IconBack";
 import {PortfolioItems} from "../components/PortfolioItems";
 import {PortfolioAnalytics} from "../components/PortfolioAnalytics";
 import {PortfolioRecs} from "../components/PortfolioRecs";
+import AOS from 'aos';
 
 export default function PortfolioScreen ({})
 {
@@ -63,6 +64,7 @@ export default function PortfolioScreen ({})
 			const data = await request(`/recs?level=${level}&years=${years}&scenario=${scenario}&sorting=${sorting}`);
 			setModelPortfolio(data.model);
 			setRecs(data.recs);
+			AOS.init({duration: 1500});
 		}
 		catch (e)
 		{
@@ -72,12 +74,12 @@ export default function PortfolioScreen ({})
 
 	return <div className={`screen`}>
 
-		<div className="screen-body pt-0">
+		<div className="screen-body pt-0" style={{paddingBottom: 200}}>
 			<div onClick={() => setScreen("MAIN")}>
 				<IconBack/>
 			</div>
 			<h1>Портфель #{portfolioId}</h1>
-			<p className="text-muted">Это реальный портфель пользователя, который сформирован вручную в соответствии с его инвестиционным профилем.<br/><b className="text-danger">Расчет бумаг - реальный, произведен на 4 сентября 2021 года.</b> Данные и котировки по тикерам получены с yahoo finance / naufor / мосбиржи.<br/>
+			<p className="text-muted ">Это реальный портфель пользователя, который сформирован вручную в соответствии с его инвестиционным профилем.<br/><b className="text-danger">Расчет бумаг - реальный, произведен на 4 сентября 2021 года.</b> Данные и котировки по тикерам получены с yahoo finance / naufor / мосбиржи.<br/>
 			<b className="text-danger">Прогноз цены</b> реализован в рамках хакатона и заключается в регрессионном анализе (код расчета и прогноза написан на python и приложен в репозитории).</p>
 
 			<div className="row">
@@ -128,28 +130,28 @@ export default function PortfolioScreen ({})
 				{portfolio && <PortfolioItems portfolio={portfolio} scenario={scenario.toLowerCase()}/>}
 			</div>
 
-			<h3 className="mt-4">Рекомендации</h3>
+			<h3 className="mt-4 animate__animated animate__flash ">Рекомендации</h3>
 			<p className="text-muted">В основе рекомендаций лежит сравнение реального портфеля с модельным (оба рассчитываются на текущую дату). В результате сравнения система предлагает инвестору произвести сделки, чтобы привести свой портфель к модельному. Подбор сделок осуществляется с учетом сценарного анализа, инвест профиля, горизонта инвестирования и суммы инвестирования.</p>
 			<div>
 				<button onClick={() => getRecs()} className="btn btn-primary btn-lg mt-2 mb-5">Подобрать рекомендации</button>
 
 				{
 					recs &&
-					<>
+					<div data-aos="fade-right">
 						<PortfolioRecs recs={recs}
 						               portfolio={portfolio}
 						               modelPortfolio={modelPortfolio}
 						               availableLimits={availableLimits}
 						               scenario={scenario}/>
-					</>
+					</div>
 				}
 
 				{
 					modelPortfolio &&
-					<>
+					<div data-aos="fade-right">
 						<h3 className="mt-4">Как изменится ваш портфель</h3>
 						<PortfolioAnalytics portfolio={portfolio} modelPortfolio={modelPortfolio} scenario={scenario.toLowerCase()}/>
-					</>
+					</div>
 				}
 
 			</div>
