@@ -28,11 +28,15 @@ function fetchActualDataForUniverse ($universe)
 
 	for ($i = 0, $max = sizeof($universe); $i < $max; $i++)
 	{
-		$row = $db -> get('predictors', ['current_price', 'price', 'percent'], ['code' => $universe[$i]['code']]);
+		$row = $db -> get('predictors', '*', ['code' => $universe[$i]['code']]);
+		var_dump($row);
+		$volRow = $db -> get('vol_ret_table', '*', ['field' => 'volatility', 'code' => $universe[$i]['code']]);
+		//var_dump($volRow);
 		$universe[$i]['current_price'] = (float)$row['current_price'];
 		$universe[$i]['price'] = (float)$row['price'];
 		$universe[$i]['percent'] = (float)$row['percent'];
 	}
+	die;
 
 	return $universe;
 }
@@ -214,6 +218,8 @@ Flight::route('GET /recs', function () {
 	$sorting = (int)$_GET['sorting'];
 
 	$modelPortfolio = generatePortfolio($level, $years, false);
+	var_dump($modelPortfolio);
+	die;
 	$portfolio = json_decode(file_get_contents("portfolio_$level.json"), true);
 	$recs = [];
 
