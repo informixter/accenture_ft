@@ -21,7 +21,7 @@ certificatesResolvers:
   myresolver:
     acme:
       email: root@insrt.ru
-      storage: acme.json
+      storage: /ssl/acme.json
       httpChallenge:
         entryPoint: web
 
@@ -30,17 +30,30 @@ log:
 
 http:
   routers:
-    app:
+    front:
       entryPoints:
         - "web"
         - "https"
       rule: "Host(`investhelper.insrt.ru`)"
-      service: app-srv
+      service: front-srv
       tls:
         certResolver: myresolver
       priority: 26
+    app:
+      entryPoints:
+        - "web"
+        - "https"
+      rule: "Host(`investhelper.insrt.ru`) && PathPrefix(`/server`)"
+      service: app-srv
+      tls:
+        certResolver: myresolver
+      priority: 33
   services:
     app-srv:
       loadBalancer:
         servers:
           - url: http://nginx:8080
+    front-srv:
+      loadBalancer:
+        servers:
+          - url: http://front:80
