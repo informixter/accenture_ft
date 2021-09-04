@@ -130,19 +130,18 @@ export default function PortfolioScreen ({})
 				<button onClick={() => getRecs()} className="btn btn-primary btn-lg mt-2 mb-5">Подобрать рекомендации</button>
 
 				{
-					modelPortfolio &&
+					recs &&
 					<>
-						<h3 className="mt-4">Как изменятся параметры:</h3>
-						<PortfolioAnalytics portfolio={portfolio} modelPortfolio={modelPortfolio} scenario={scenario.toLowerCase()}/>
+						<h3 className="mt-4">Рекомендуемые сделки</h3>
+						<PortfolioRecs recs={recs}/>
 					</>
 				}
 
 				{
-					recs &&
+					modelPortfolio &&
 					<>
-						<div className="row">
-							<PortfolioRecs recs={recs}/>
-						</div>
+						<h3 className="mt-4">Как изменится ваш портфель</h3>
+						<PortfolioAnalytics portfolio={portfolio} modelPortfolio={modelPortfolio} scenario={scenario.toLowerCase()}/>
 					</>
 				}
 

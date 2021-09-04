@@ -215,8 +215,8 @@ Flight::route('GET /availableLimits', function () {
 
 Flight::route('GET /generateRandomRealPortfolios', function () {
 
-	$modelPortfolio = generatePortfolio("HIGH", 5, true);
-	file_put_contents('portfolio_HIGH.json', json_encode($modelPortfolio));
+	/*$modelPortfolio = generatePortfolio("HIGH", 5, true);
+	file_put_contents('portfolio_HIGH.json', json_encode($modelPortfolio));*/
 
 	$modelPortfolio = generatePortfolio("LOW", 1, true);
 	file_put_contents('portfolio_LOW.json', json_encode($modelPortfolio));
@@ -227,10 +227,10 @@ Flight::route('GET /recs', function () {
 	$db = getDb();
 	$level = $_GET['level'];
 	$years = (int)$_GET['years'];
-	$scenario = (int)$_GET['scenario'];
+	$scenario = $_GET['scenario'];
 	$sorting = (int)$_GET['sorting'];
 
-	$modelPortfolio = generatePortfolio($level, $years, false, $scenario);
+	$modelPortfolio = generatePortfolio($level, $years, false, mb_strtolower($scenario));
 	$portfolio = json_decode(file_get_contents("portfolio_$level.json"), true);
 	$recs = [];
 
@@ -248,17 +248,17 @@ Flight::route('GET /recs', function () {
 
 		if ($itemFound === false)
 		{
-			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'count' => $portfolio[$i]['count']]);
+			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'old' => $portfolio[$i]['count'], 'new' => $portfolio[$i]['count'], 'count' => $portfolio[$i]['count']]);
 			continue;
 		}
 
 		if ($itemFound['count'] > $portfolio[$i]['count'])
 		{
-			$recs[] = array_merge($portfolio[$i], ['act' => 'buy', 'count' => $itemFound['count'] - $portfolio[$i]['count']]);
+			$recs[] = array_merge($portfolio[$i], ['act' => 'buy', 'old' => $portfolio[$i]['count'], 'new' => $itemFound['count'], 'count' => $itemFound['count'] - $portfolio[$i]['count']]);
 		}
 		else if ($itemFound['count'] < $portfolio[$i]['count'])
 		{
-			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'count' => $portfolio[$i]['count'] - $itemFound['count']]);
+			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'old' => $portfolio[$i]['count'], 'new' => $itemFound['count'], 'count' => $portfolio[$i]['count'] - $itemFound['count']]);
 		}
 	}
 

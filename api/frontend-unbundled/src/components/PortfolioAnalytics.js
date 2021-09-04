@@ -102,7 +102,14 @@ export const PortfolioAnalytics = ({portfolio, modelPortfolio = null, scenario})
 			<div className="col-md-3 mb-3">
 				<div className="alert alert-success mb-0" role="alert">
 					<h3 className="alert-heading mb-0">{calcVol(modelPortfolio || portfolio)}%</h3>
-					<div className={`mb-2 text-warning`}>&nbsp;{modelPortfolio ? ((volDif > 0 ? '+' : '') + ' ' + (volDif.toFixed(2)) + '%') : ''}</div>
+					{
+						!modelPortfolio &&
+						<div className={`mb-2 text-warning`}>&nbsp;</div>
+					}
+					{
+						modelPortfolio &&
+						<div className={`mb-2 badge badge-pill ${volDif < 0 ? 'badge-primary' : 'badge-danger'}`}>&nbsp;{(volDif > 0 ? '+' : '') + ' ' + (volDif.toFixed(2)) + '%'}</div>
+					}
 					<p style={{minHeight: 60}} className="mb-0 border-top pt-3 small">Средняя волатильность</p>
 				</div>
 			</div>
@@ -116,7 +123,7 @@ export const PortfolioAnalytics = ({portfolio, modelPortfolio = null, scenario})
 					}
 					{
 						modelPortfolio &&
-						<div className={`mb-2 text-warning`}>{(scenarioIncomeDif > 0 ? '+' : '') + ' ' + (scenarioIncomeDif.toFixed(2)) + '%'}</div>
+						<div className={`mb-2 badge badge-pill ${scenarioIncomeDif > 0 ? 'badge-primary' : 'badge-danger'}`}>{(scenarioIncomeDif > 0 ? '+' : '') + ' ' + (scenarioIncomeDif.toFixed(2)) + '%'}</div>
 					}
 					<p style={{minHeight: 60}} className="mb-0 border-top pt-3 small">Ожидаемый доход портфеля по сценарию на 1 год</p>
 				</div>
@@ -131,7 +138,7 @@ export const PortfolioAnalytics = ({portfolio, modelPortfolio = null, scenario})
 					}
 					{
 						modelPortfolio &&
-						<div className={`mb-2 text-warning`}>{(historyIncomeDif > 0 ? '+' : '') + ' ' + (historyIncomeDif.toFixed(2)) + '%'}</div>
+						<div className={`mb-2 badge badge-pill ${historyIncomeDif > 0 ? 'badge-primary' : 'badge-danger'}`}>{(historyIncomeDif > 0 ? '+' : '') + ' ' + (historyIncomeDif.toFixed(2)) + '%'}</div>
 					}
 					<p style={{minHeight: 60}} className="mb-0 border-top pt-3 small">Историческая доходность данной корзины за последний год</p>
 				</div>
