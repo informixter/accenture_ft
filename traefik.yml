@@ -30,20 +30,20 @@ log:
 
 http:
   routers:
-    front:
-      entryPoints:
-        - "web"
-        - "https"
-      rule: "Host(`investhelper.insrt.ru`)"
-      service: front-srv
-      tls:
-        certResolver: myresolver
-      priority: 26
+#    front:
+#      entryPoints:
+#        - "web"
+#        - "https"
+#      rule: "Host(`investhelper.insrt.ru`)"
+#      service: front-srv
+#      tls:
+#        certResolver: myresolver
+#      priority: 26
     app:
       entryPoints:
         - "web"
         - "https"
-      rule: "Host(`investhelper.insrt.ru`) && PathPrefix(`/server`)"
+      rule: "Host(`investhelper.insrt.ru`)"
       service: app-srv
       tls:
         certResolver: myresolver
@@ -53,7 +53,7 @@ http:
       loadBalancer:
         servers:
           - url: http://nginx:8080
-    front-srv:
-      loadBalancer:
-        servers:
-          - url: http://front:80
+#    front-srv:
+#      loadBalancer:
+#        servers:
+#          - url: http://front:80
