@@ -101,7 +101,7 @@ export default function PortfolioScreen ({})
 						</div>
 					</div>
 				</div>
-				<div className="col-md-3 col-sm-12">
+				{/*<div className="col-md-3 col-sm-12">
 					<div className="form-group">
 						<label className="mr-3">Критерии подбора бумаг</label>
 						<div>
@@ -112,7 +112,7 @@ export default function PortfolioScreen ({})
 							</select>
 						</div>
 					</div>
-				</div>
+				</div>*/}
 			</div>
 
 			<h3 className="mt-4">Аналитика и состав</h3>

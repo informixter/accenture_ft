@@ -28,10 +28,22 @@ function fetchActualDataForUniverse ($universe)
 
 	for ($i = 0, $max = sizeof($universe); $i < $max; $i++)
 	{
-		$row = $db -> get('predictors', ['current_price', 'price', 'percent'], ['code' => $universe[$i]['code']]);
-		$universe[$i]['current_price'] = (float)$row['current_price'];
-		$universe[$i]['price'] = (float)$row['price'];
-		$universe[$i]['percent'] = (float)$row['percent'];
+		$rows = $db -> select('predictors', '*', ['code' => $universe[$i]['code'], 'current_price_date' => '2021-09-03']);
+		foreach ($rows as $row)
+		{
+			$universe[$i]['price_' . $row['scenario']] = $row['price'];
+			$universe[$i]['percent_' . $row['scenario']] = $row['percent'];
+
+			if ($row['scenario'] === 'base')
+			{
+				$universe[$i]['current_price'] = (float)$row['current_price'];
+			}
+		}
+
+		$volRow = $db -> get('vol_ret_table', '*', ['field' => 'volatility', 'code' => $universe[$i]['code']]);
+		$universe[$i]['volatility'] = (float)$volRow['value'];
+		$volRow = $db -> get('vol_ret_table', '*', ['field' => '1y_return', 'code' => $universe[$i]['code']]);
+		$universe[$i]['previousYearPercent'] = (float)$volRow['value'];
 	}
 
 	return $universe;
@@ -214,6 +226,8 @@ Flight::route('GET /recs', function () {
 	$sorting = (int)$_GET['sorting'];
 
 	$modelPortfolio = generatePortfolio($level, $years, false);
+	var_dump($modelPortfolio);
+	die;
 	$portfolio = json_decode(file_get_contents("portfolio_$level.json"), true);
 	$recs = [];
 
