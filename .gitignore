@@ -4,3 +4,6 @@
 /api/app/vendor
 /api/frontend-unbundled/node_modules
 /tmp/
+/notebooks/.Trash-0/
+/notebooks/*.xlsx
+/notebooks/output/*.ipynb

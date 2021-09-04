@@ -36,16 +36,6 @@ services:
       - ./api/app:/var/www/html
     networks:
       - backend
-#  front:
-#    hostname: front
-#    image: nginx:alpine
-#    restart: unless-stopped
-#    ports:
-#      - 8090:80
-#    networks:
-#      - backend
-#    volumes:
-#      - ./api/front:/usr/share/nginx/html
   nginx:
     image: nginx:alpine
     restart: unless-stopped
