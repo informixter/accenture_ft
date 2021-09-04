@@ -71,7 +71,7 @@ export default function MainScreen ({})
 				        	level &&
 					        <>
 						        <p className="text-muted mb-0">{LEVELS_INFO[level].ru + ' профиль' }</p>
-						        <a onClick={() => {setLevel(null);setPortfolio(null);setAvailableLimits(null);}} href="#">сбросить профиль (есть демонстрация агрессивного и консервативного профиля)</a>
+						        <a onClick={() => {setLevel(null);setPortfolio(null);setAvailableLimits(null);}} href="#">сбросить профиль (есть демонстрация агрессивного и умеренного профиля)</a>
 					        </>
 				        }
 			        </div>
