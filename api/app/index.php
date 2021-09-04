@@ -231,8 +231,6 @@ Flight::route('GET /recs', function () {
 	$sorting = (int)$_GET['sorting'];
 
 	$modelPortfolio = generatePortfolio($level, $years, false, $scenario);
-	var_dump($modelPortfolio);
-	die;
 	$portfolio = json_decode(file_get_contents("portfolio_$level.json"), true);
 	$recs = [];
 

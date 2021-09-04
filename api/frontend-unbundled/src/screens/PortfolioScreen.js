@@ -133,9 +133,7 @@ export default function PortfolioScreen ({})
 					modelPortfolio &&
 					<>
 						<h3 className="mt-4">Как изменятся параметры:</h3>
-						<div className="row">
-							<PortfolioAnalytics portfolio={modelPortfolio} scenario={scenario.toLowerCase()}/>
-						</div>
+						<PortfolioAnalytics portfolio={portfolio} modelPortfolio={modelPortfolio} scenario={scenario.toLowerCase()}/>
 					</>
 				}
 
