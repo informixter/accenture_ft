@@ -25,10 +25,9 @@ function getDataFromFile ()
 function fetchActualDataForUniverse ($universe)
 {
 	$db = getDb();
-
 	for ($i = 0, $max = sizeof($universe); $i < $max; $i++)
 	{
-		$rows = $db -> select('predictors', '*', ['code' => $universe[$i]['code'], 'current_price_date' => '2021-09-03']);
+		$rows = $db -> select('predictors', '*', ['code' => $universe[$i]['code']/*, 'current_price_date' => '2021-09-03'*/]);
 		foreach ($rows as $row)
 		{
 			$universe[$i]['price_' . $row['scenario']] = $row['price'];
@@ -107,7 +106,7 @@ function generatePortfolio ($level, $years, $real, $scenario = "BASE")
 
 	for ($i = 0, $max = sizeof($universe); $i < $max; $i++)
 	{
-		if (!in_array($universe[$i]['asset_class'], $availableAssetClasses) or in_array($universe[$i]['asset_class'], ['Облигации корпоративные', 'ОФЗ', 'Облигации высокодоходные']))
+		if (!in_array($universe[$i]['asset_class'], $availableAssetClasses) /*or in_array($universe[$i]['asset_class'], ['Облигации корпоративные', 'ОФЗ', 'Облигации высокодоходные'])*/)
 		{
 			unset($universe[$i]);
 		}
@@ -131,9 +130,9 @@ function generatePortfolio ($level, $years, $real, $scenario = "BASE")
 		$assetClass = $universe[$i]['asset_class'];
 		$curPrice = $universe[$i]['price'] * ($universe[$i]['currency'] === "RUB" ? 1 : 85);
 		$code = $universe[$i]['code'];
-		$assetClassMaxWeight = $limitsByAssetClasses[$assetClass]['asset_class_max_weight'] + ($real ? random_int(-10, 10) : 0);
-		$issuerMaxWeight = $limitsByAssetClasses[$assetClass]['issuer_max_weight'] + ($real ? random_int(-5, 5) : 0);
-		$assetMaxWeight = $limitsByAssetClasses[$assetClass]['asset_max_weight'] + ($real ? random_int(-2, 102) : 0);
+		$assetClassMaxWeight = $limitsByAssetClasses[$assetClass]['asset_class_max_weight'] + ($real ? random_int(-6, 6) : 0);
+		$issuerMaxWeight = $limitsByAssetClasses[$assetClass]['issuer_max_weight'] + ($real ? random_int(-3, 3) : 0);
+		$assetMaxWeight = $limitsByAssetClasses[$assetClass]['asset_max_weight'] + ($real ? random_int(-2, 2) : 0);
 
 		if (!isset($sumsByAssetClasses[$assetClass]))
 		{
@@ -218,8 +217,11 @@ Flight::route('GET /generateRandomRealPortfolios', function () {
 	/*$modelPortfolio = generatePortfolio("HIGH", 5, true);
 	file_put_contents('portfolio_HIGH.json', json_encode($modelPortfolio));*/
 
-	$modelPortfolio = generatePortfolio("LOW", 1, true);
-	file_put_contents('portfolio_LOW.json', json_encode($modelPortfolio));
+	//$modelPortfolio = generatePortfolio("LOW", 1, true);
+	//file_put_contents('portfolio_LOW.json', json_encode($modelPortfolio));
+
+	$modelPortfolio = generatePortfolio("MEDIUM", 3, true);
+	file_put_contents('portfolio_MEDIUM.json', json_encode($modelPortfolio));
 });
 
 
@@ -248,7 +250,7 @@ Flight::route('GET /recs', function () {
 
 		if ($itemFound === false)
 		{
-			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'old' => $portfolio[$i]['count'], 'new' => $portfolio[$i]['count'], 'count' => $portfolio[$i]['count']]);
+			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'old' => $portfolio[$i]['count'], 'new' => 0, 'count' => $portfolio[$i]['count']]);
 			continue;
 		}
 
@@ -261,6 +263,26 @@ Flight::route('GET /recs', function () {
 			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'old' => $portfolio[$i]['count'], 'new' => $itemFound['count'], 'count' => $portfolio[$i]['count'] - $itemFound['count']]);
 		}
 	}
+
+	for ($i = 0, $max = sizeof($modelPortfolio); $i < $max; $i++)
+	{
+		$itemFound = false;
+		for ($j = 0, $max2 = sizeof($portfolio); $j < $max2; $j++)
+		{
+			if ($portfolio[$j]['code'] === $modelPortfolio[$i]['code'])
+			{
+				$itemFound = $portfolio[$j];
+				break;
+			}
+		}
+
+		if ($itemFound === false)
+		{
+			$recs[] = array_merge($modelPortfolio[$i], ['act' => 'buy', 'old' => 0, 'new' => $modelPortfolio[$i]['count'], 'count' => $modelPortfolio[$i]['count']]);
+			continue;
+		}
+	}
+
 
 	sendResponse(['model' => $modelPortfolio, 'recs' => $recs]);
 });

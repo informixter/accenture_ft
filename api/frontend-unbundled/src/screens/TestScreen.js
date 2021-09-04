@@ -7,7 +7,7 @@ import IconBack from "../components/icons/IconBack";
 export default function TestScreen ({})
 {
     const {requestLoading, request} = useRequest();
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(null);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedVariantIndex, setSelectedVariantIndex] = useState(null);
     const [balls, setBalls] = useState(0);
     const [finished, setFinished] = useState(false);
@@ -29,16 +29,17 @@ export default function TestScreen ({})
 		    // баллы зависят от вопросов. контент вопросов не так важен, как реализация.
 		    if (newBalls === 0)
 		    {
-			    setLocalLevel("LOW");
+			    setLevel("LOW");
 		    }
-		    /*else if (balls === 2)
+		    else if (newBalls === 1)
 		    {
-			    setLocalLevel("MEDIUM");
-		    }*/
-		    else /*if (balls === 3)*/
-		    {
-			    setLocalLevel("HIGH");
+			    setLevel("MEDIUM");
 		    }
+		    else if (newBalls === 2)
+		    {
+			    setLevel("HIGH");
+		    }
+		    setScreen("MAIN");
 	    }
     }
 

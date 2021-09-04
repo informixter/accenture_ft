@@ -17,16 +17,18 @@ export default function PortfolioScreen ({})
 	const [modelPortfolio, setModelPortfolio] = useState(null);
 	const [portfolio, setPortfolio] = useState(null);
 	const [scenario, setScenario] = useState("BASE");
-	const [years, setYears] = useState(level === "HIGH" ? 5 : 1);
+	const [years, setYears] = useState(level === "HIGH" ? 5 : (level === "MEDIUM" ? 3 : 1));
 	const [sorting, setSorting] = useState("MAIN");
+	const [availableLimits, setAvailableLimits] = useState([]);
 
-/*	useEffect(() =>
+	useEffect(() =>
 	{
 		(async () =>
 		{
 			try
 			{
 				const data = await request(`/availableLimits?level=${level}`);
+				setAvailableLimits(data);
 				console.log(data);
 			}
 			catch (e)
@@ -34,7 +36,7 @@ export default function PortfolioScreen ({})
 
 			}
 		})();
-	}, [])*/
+	}, [level]);
 
 	useEffect(() =>
 	{
@@ -45,6 +47,7 @@ export default function PortfolioScreen ({})
 				const data = await request(`/portfolio?level=${level}`);
 				setPortfolio(data);
 				console.log(data);
+				//getRecs();
 			}
 			catch (e)
 			{
@@ -97,6 +100,7 @@ export default function PortfolioScreen ({})
 						<div>
 							<select onChange={(e) => setYears(e.target.value)} value={years} className="form-control custom-select mr-3">
 								<option value="1">1 год</option>
+								<option value="3">3 года</option>
 								<option value="5">5 лет</option>
 							</select>
 						</div>
@@ -132,8 +136,11 @@ export default function PortfolioScreen ({})
 				{
 					recs &&
 					<>
-						<h3 className="mt-4">Рекомендуемые сделки</h3>
-						<PortfolioRecs recs={recs}/>
+						<PortfolioRecs recs={recs}
+						               portfolio={portfolio}
+						               modelPortfolio={modelPortfolio}
+						               availableLimits={availableLimits}
+						               scenario={scenario}/>
 					</>
 				}
 
