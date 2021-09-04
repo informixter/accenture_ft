@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const PortfolioAnalytics = ({portfolio}) =>
+export const PortfolioAnalytics = ({portfolio, scenario}) =>
 {
 
 	function calcTotalSum ()
@@ -11,7 +11,7 @@ export const PortfolioAnalytics = ({portfolio}) =>
 		}
 
 		return portfolio.reduce((sum, row) => {
-			return sum + Math.round(row.count * row.current_price * (row.currency === "RUB" ? 1 : 75));
+			return sum + Math.round(row.count * row.price * (row.currency === "RUB" ? 1 : 75));
 		}, 0);
 	}
 
@@ -21,9 +21,8 @@ export const PortfolioAnalytics = ({portfolio}) =>
 		{
 			return 0;
 		}
-
 		return Math.round(portfolio.reduce((sum, row) => {
-			return sum + row.volatility * row.count * row.current_price * (row.currency === "RUB" ? 1 : 75);
+			return sum + row.volatility * row.count * row.price * (row.currency === "RUB" ? 1 : 75);
 		}, 0) / calcTotalSum() * 100) / 100;
 	}
 
@@ -35,7 +34,7 @@ export const PortfolioAnalytics = ({portfolio}) =>
 		}
 
 		const summaryRating = Math.round(portfolio.reduce((sum, row) => {
-			return sum + row.credit_risk_score * row.count * row.current_price * (row.currency === "RUB" ? 1 : 75);
+			return sum + row.credit_risk_score * row.count * row.price * (row.currency === "RUB" ? 1 : 75);
 		}, 0) / calcTotalSum());
 
 		let nearestRating = '';
@@ -60,7 +59,19 @@ export const PortfolioAnalytics = ({portfolio}) =>
 		}
 
 		return Math.round(portfolio.reduce((sum, row) => {
-			return sum + row.percent * row.count * row.current_price * (row.currency === "RUB" ? 1 : 75);
+			return sum + row['percent_' + scenario] * row.count * row['price_' + scenario] * (row.currency === "RUB" ? 1 : 75);
+		}, 0) / calcTotalSum() * 100) / 100;
+	}
+
+	function calcHistoryIncome ()
+	{
+		if (!portfolio)
+		{
+			return 0;
+		}
+
+		return Math.round(portfolio.reduce((sum, row) => {
+			return sum + row['previousYearPercent'] * row.count * row['price'] * (row.currency === "RUB" ? 1 : 75);
 		}, 0) / calcTotalSum() * 100) / 100;
 	}
 
@@ -99,13 +110,13 @@ export const PortfolioAnalytics = ({portfolio}) =>
 				</div>
 			</div>
 
-			{/*<div className="col-md-3 mb-3">
+			<div className="col-md-3 mb-3">
 				<div className="alert alert-info mb-0" role="alert">
-					<h3 className="alert-heading mb-0">5.5%</h3>
-					<div className="mb-2">(218.3 руб.)</div>
+					<h3 className="alert-heading mb-0">{calcHistoryIncome()}%</h3>
+					<div className="mb-2">({(Math.round(calcHistoryIncome() / 100 * calcTotalSum())).toLocaleString()} руб.)</div>
 					<p style={{minHeight: 60}} className="mb-0 border-top pt-3 small">Историческая доходность данной корзины за последний год</p>
 				</div>
-			</div>*/}
+			</div>
 
 		</div>
 	);

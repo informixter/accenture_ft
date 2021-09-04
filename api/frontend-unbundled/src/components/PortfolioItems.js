@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const PortfolioItems = ({portfolio}) =>
+export const PortfolioItems = ({portfolio, scenario}) =>
 {
 	return portfolio.filter(row => row.price > 0).map(row => (
 			<div className="col-md-6 col-sm-12 mb-3">
@@ -15,17 +15,17 @@ export const PortfolioItems = ({portfolio}) =>
 						<div className="w-100">
 							<div className="d-flex justify-content-between">
 								<span className="font-weight-bold card-title">{row.asset}</span>
-								<span>{Math.round(row.count * row.current_price * 100) / 100} {row.currency}</span>
+								<span>{Math.round(row.count * row.price * 100) / 100} {row.currency}</span>
 							</div>
-							<p className="text-muted mb-0">{row.count} шт · {Math.round(row.current_price * 100) / 100} {row.currency}</p>
+							<p className="text-muted mb-0">{row.count} шт · {Math.round(row.price * 100) / 100} {row.currency}</p>
 							<p className="text-muted mb-0">{row.asset_class} · {row.rating}</p>
 
 							<div className="d-flex justify-content-between mt-3">
 								<span className="card-title">Прогноз на год</span>
-								<span className={(row.percent > 0 ? 'text-success' : 'text-danger') + ' text-right'}>
-											{Math.round(row.price * row.count * 100) / 100} {row.currency}
+								<span className={(row['percent_' + scenario] > 0 ? 'text-success' : 'text-danger') + ' text-right'}>
+											{Math.round(row['price_' + scenario] * row.count * 100) / 100} {row.currency}
 									<br/>
-											<span style={{fontSize: 12}}>{Math.round(row.price * 100) / 100} {row.currency} / шт, {row.percent > 0 ? '+' : '-'}{Math.round(row.percent * 100) / 100}%</span>
+											<span style={{fontSize: 12}}>{Math.round(row['price_' + scenario] * 100) / 100} {row.currency} / шт, {row['percent_' + scenario] > 0 ? '+' : '-'}{Math.abs(Math.round(row['percent_' + scenario] * 100) / 100)}%</span>
 										</span>
 							</div>
 						</div>

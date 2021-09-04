@@ -16,7 +16,7 @@ export default function PortfolioScreen ({})
 	const [recs, setRecs] = useState(null);
 	const [modelPortfolio, setModelPortfolio] = useState(null);
 	const [portfolio, setPortfolio] = useState(null);
-	const [scenario, setScenario] = useState("MAIN");
+	const [scenario, setScenario] = useState("BASE");
 	const [years, setYears] = useState(level === "HIGH" ? 5 : 1);
 	const [sorting, setSorting] = useState("MAIN");
 
@@ -84,6 +84,7 @@ export default function PortfolioScreen ({})
 						<div>
 							<select onChange={(e) => setScenario(e.target.value)} value={scenario} className="form-control custom-select mr-3">
 								<option value="BASE">Базовый</option>
+								<option value="NEGATIVE">Негативный</option>
 								<option value="POSITIVE">Позитивный</option>
 							</select>
 							{/*<a href="#" className="small">Подробнее про сценарии</a>*/}
@@ -117,10 +118,10 @@ export default function PortfolioScreen ({})
 
 			<h3 className="mt-4">Аналитика и состав</h3>
 
-			<PortfolioAnalytics portfolio={portfolio}/>
+			<PortfolioAnalytics portfolio={portfolio} scenario={scenario.toLowerCase()}/>
 
 			<div className="row">
-				{portfolio && <PortfolioItems portfolio={portfolio}/>}
+				{portfolio && <PortfolioItems portfolio={portfolio} scenario={scenario.toLowerCase()}/>}
 			</div>
 
 			<h3 className="mt-4">Рекомендации</h3>
@@ -133,7 +134,7 @@ export default function PortfolioScreen ({})
 					<>
 						<h3 className="mt-4">Как изменятся параметры:</h3>
 						<div className="row">
-							<PortfolioAnalytics portfolio={modelPortfolio}/>
+							<PortfolioAnalytics portfolio={modelPortfolio} scenario={scenario.toLowerCase()}/>
 						</div>
 					</>
 				}

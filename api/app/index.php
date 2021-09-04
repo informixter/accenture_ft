@@ -36,7 +36,7 @@ function fetchActualDataForUniverse ($universe)
 
 			if ($row['scenario'] === 'base')
 			{
-				$universe[$i]['current_price'] = (float)$row['current_price'];
+				$universe[$i]['price'] = (float)$row['current_price'];
 			}
 		}
 
@@ -44,9 +44,14 @@ function fetchActualDataForUniverse ($universe)
 		$universe[$i]['volatility'] = (float)$volRow['value'];
 		$volRow = $db -> get('vol_ret_table', '*', ['field' => '1y_return', 'code' => $universe[$i]['code']]);
 		$universe[$i]['previousYearPercent'] = (float)$volRow['value'];
+
+		if (!$universe[$i]['price'])
+		{
+			unset($universe[$i]);
+		}
 	}
 
-	return $universe;
+	return array_values($universe);
 }
 
 function sheetToMap ($data)
@@ -94,7 +99,7 @@ function getAvailableLimits ($level, $years = null)
 	return $byAssetClasses;
 }
 
-function generatePortfolio ($level, $years, $real)
+function generatePortfolio ($level, $years, $real, $scenario = "BASE")
 {
 	list($limits, $universe) = getDataFromFile();
 	$limitsByAssetClasses = getAvailableLimits($level, $years);
@@ -110,8 +115,8 @@ function generatePortfolio ($level, $years, $real)
 
 	$universe = array_values($universe);
 	$universe = fetchActualDataForUniverse($universe);
-	usort($universe, function ($a, $b) {
-		return $a['percent'] <=> $b['percent'];
+	usort($universe, function ($a, $b) use ($scenario) {
+		return $a['percent_' . $scenario] <=> $b['percent_' . $scenario];
 	});
 	$universe = array_reverse($universe);
 	//array_map(function ($item) {echo print_r($item, true) . "<br><br>";}, $universe);
@@ -124,7 +129,7 @@ function generatePortfolio ($level, $years, $real)
 	for ($i = 0, $max = sizeof($universe); $i < $max; $i++)
 	{
 		$assetClass = $universe[$i]['asset_class'];
-		$curPrice = $universe[$i]['current_price'] * ($universe[$i]['currency'] === "RUB" ? 1 : 85);
+		$curPrice = $universe[$i]['price'] * ($universe[$i]['currency'] === "RUB" ? 1 : 85);
 		$code = $universe[$i]['code'];
 		$assetClassMaxWeight = $limitsByAssetClasses[$assetClass]['asset_class_max_weight'] + ($real ? random_int(-10, 10) : 0);
 		$issuerMaxWeight = $limitsByAssetClasses[$assetClass]['issuer_max_weight'] + ($real ? random_int(-5, 5) : 0);
@@ -225,7 +230,7 @@ Flight::route('GET /recs', function () {
 	$scenario = (int)$_GET['scenario'];
 	$sorting = (int)$_GET['sorting'];
 
-	$modelPortfolio = generatePortfolio($level, $years, false);
+	$modelPortfolio = generatePortfolio($level, $years, false, $scenario);
 	var_dump($modelPortfolio);
 	die;
 	$portfolio = json_decode(file_get_contents("portfolio_$level.json"), true);
