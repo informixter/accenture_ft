@@ -28,17 +28,30 @@ function fetchActualDataForUniverse ($universe)
 
 	for ($i = 0, $max = sizeof($universe); $i < $max; $i++)
 	{
-		$row = $db -> get('predictors', '*', ['code' => $universe[$i]['code']]);
-		var_dump($row);
-		$volRow = $db -> get('vol_ret_table', '*', ['field' => 'volatility', 'code' => $universe[$i]['code']]);
-		//var_dump($volRow);
-		$universe[$i]['current_price'] = (float)$row['current_price'];
-		$universe[$i]['price'] = (float)$row['price'];
-		$universe[$i]['percent'] = (float)$row['percent'];
-	}
-	die;
+		$rows = $db -> select('predictors', '*', ['code' => $universe[$i]['code'], 'current_price_date' => '2021-09-03']);
+		foreach ($rows as $row)
+		{
+			$universe[$i]['price_' . $row['scenario']] = $row['price'];
+			$universe[$i]['percent_' . $row['scenario']] = $row['percent'];
 
-	return $universe;
+			if ($row['scenario'] === 'base')
+			{
+				$universe[$i]['price'] = (float)$row['current_price'];
+			}
+		}
+
+		$volRow = $db -> get('vol_ret_table', '*', ['field' => 'volatility', 'code' => $universe[$i]['code']]);
+		$universe[$i]['volatility'] = (float)$volRow['value'];
+		$volRow = $db -> get('vol_ret_table', '*', ['field' => '1y_return', 'code' => $universe[$i]['code']]);
+		$universe[$i]['previousYearPercent'] = (float)$volRow['value'];
+
+		if (!$universe[$i]['price'])
+		{
+			unset($universe[$i]);
+		}
+	}
+
+	return array_values($universe);
 }
 
 function sheetToMap ($data)
@@ -86,7 +99,7 @@ function getAvailableLimits ($level, $years = null)
 	return $byAssetClasses;
 }
 
-function generatePortfolio ($level, $years, $real)
+function generatePortfolio ($level, $years, $real, $scenario = "BASE")
 {
 	list($limits, $universe) = getDataFromFile();
 	$limitsByAssetClasses = getAvailableLimits($level, $years);
@@ -102,8 +115,8 @@ function generatePortfolio ($level, $years, $real)
 
 	$universe = array_values($universe);
 	$universe = fetchActualDataForUniverse($universe);
-	usort($universe, function ($a, $b) {
-		return $a['percent'] <=> $b['percent'];
+	usort($universe, function ($a, $b) use ($scenario) {
+		return $a['percent_' . $scenario] <=> $b['percent_' . $scenario];
 	});
 	$universe = array_reverse($universe);
 	//array_map(function ($item) {echo print_r($item, true) . "<br><br>";}, $universe);
@@ -116,7 +129,7 @@ function generatePortfolio ($level, $years, $real)
 	for ($i = 0, $max = sizeof($universe); $i < $max; $i++)
 	{
 		$assetClass = $universe[$i]['asset_class'];
-		$curPrice = $universe[$i]['current_price'] * ($universe[$i]['currency'] === "RUB" ? 1 : 85);
+		$curPrice = $universe[$i]['price'] * ($universe[$i]['currency'] === "RUB" ? 1 : 85);
 		$code = $universe[$i]['code'];
 		$assetClassMaxWeight = $limitsByAssetClasses[$assetClass]['asset_class_max_weight'] + ($real ? random_int(-10, 10) : 0);
 		$issuerMaxWeight = $limitsByAssetClasses[$assetClass]['issuer_max_weight'] + ($real ? random_int(-5, 5) : 0);
@@ -202,8 +215,8 @@ Flight::route('GET /availableLimits', function () {
 
 Flight::route('GET /generateRandomRealPortfolios', function () {
 
-	$modelPortfolio = generatePortfolio("HIGH", 5, true);
-	file_put_contents('portfolio_HIGH.json', json_encode($modelPortfolio));
+	/*$modelPortfolio = generatePortfolio("HIGH", 5, true);
+	file_put_contents('portfolio_HIGH.json', json_encode($modelPortfolio));*/
 
 	$modelPortfolio = generatePortfolio("LOW", 1, true);
 	file_put_contents('portfolio_LOW.json', json_encode($modelPortfolio));
@@ -214,12 +227,10 @@ Flight::route('GET /recs', function () {
 	$db = getDb();
 	$level = $_GET['level'];
 	$years = (int)$_GET['years'];
-	$scenario = (int)$_GET['scenario'];
+	$scenario = $_GET['scenario'];
 	$sorting = (int)$_GET['sorting'];
 
-	$modelPortfolio = generatePortfolio($level, $years, false);
-	var_dump($modelPortfolio);
-	die;
+	$modelPortfolio = generatePortfolio($level, $years, false, mb_strtolower($scenario));
 	$portfolio = json_decode(file_get_contents("portfolio_$level.json"), true);
 	$recs = [];
 
@@ -237,17 +248,17 @@ Flight::route('GET /recs', function () {
 
 		if ($itemFound === false)
 		{
-			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'count' => $portfolio[$i]['count']]);
+			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'old' => $portfolio[$i]['count'], 'new' => $portfolio[$i]['count'], 'count' => $portfolio[$i]['count']]);
 			continue;
 		}
 
 		if ($itemFound['count'] > $portfolio[$i]['count'])
 		{
-			$recs[] = array_merge($portfolio[$i], ['act' => 'buy', 'count' => $itemFound['count'] - $portfolio[$i]['count']]);
+			$recs[] = array_merge($portfolio[$i], ['act' => 'buy', 'old' => $portfolio[$i]['count'], 'new' => $itemFound['count'], 'count' => $itemFound['count'] - $portfolio[$i]['count']]);
 		}
 		else if ($itemFound['count'] < $portfolio[$i]['count'])
 		{
-			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'count' => $portfolio[$i]['count'] - $itemFound['count']]);
+			$recs[] = array_merge($portfolio[$i], ['act' => 'sell', 'old' => $portfolio[$i]['count'], 'new' => $itemFound['count'], 'count' => $portfolio[$i]['count'] - $itemFound['count']]);
 		}
 	}
 
