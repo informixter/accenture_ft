@@ -7,6 +7,7 @@ stop:
 	docker-compose down -v
 
 run_local:
+	mkdir notebook/output
 	docker-compose up -d postgres jupyter php nginx
 
 run_prod:
