@@ -1,6 +1,6 @@
 import {useCallback, useState} from "react";
 
-export const API_ENDPOINT = 'https://investhelper.insrt.ru/server';
+export const API_ENDPOINT = '/server';
 
 export function useRequest ()
 {
