@@ -15,6 +15,9 @@ run_prod:
 init:
 	docker-compose exec -T jupyter bash -c 'papermill extractors.ipynb /root/output/extractors.ipynb'
 	docker-compose exec -T jupyter bash -c 'papermill lg-exp.ipynb /root/output/lg-exp.ipynb'
+	docker-compose exec -T php bash -c 'composer install'
+
+
 
 git-fix:
 	git add .
