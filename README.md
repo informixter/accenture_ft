@@ -39,34 +39,39 @@ apt-get upgrade
 apt-get install build-essential git
 ```
 
-
 ### Установка пакета docker-compose
+Если у вас уже установлен `docker-compose`, то данная инструкция вам не потребуется и вы можете переходить к установке проекта.
 ```shell
 apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
-
+```
+```shell
 curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-
+```
+```shell
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-
+```
+```shell
 apt-get update && apt-get install docker-ce docker-ce-cli containerd.io -y
-
+```
+```shell
 apt-cache madison docker-ce
-
+```
+```shell
 curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-
+```
+```shell
 chmod +x /usr/local/bin/docker-compose
-
+```
+```shell
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-
+```
+```shell
 docker-compose --version
 ```
 
 ### Установка проекта
-Переходим в домашнию папку.
-```shell
-cd ~/
-```
+
 Клонируем проект и переходим в папку.
 ```shell
 git clone https://github.com/informixter/accenture_ft.git && cd accenture_ft
